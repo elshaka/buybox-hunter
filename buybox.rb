@@ -4,7 +4,8 @@ require 'pry'
 
 PRODUCT_PARSERS = {
   asin: ->(product) { product.data_asin },
-  url: ->(product) { product.a(class: 'a-link-normal').href }
+  url: ->(product) { product.a(class: 'a-link-normal').href },
+  title: ->(product) { product.span(class: 'a-text-normal').text }
 }
 
 url = ARGV[0]
