@@ -1,6 +1,5 @@
 require 'watir'
 require 'csv'
-require 'pry'
 
 MAX_RESULT_PAGES = 5
 MINIMUM_RATING_COUNT = 1000
@@ -61,14 +60,15 @@ begin
     browser.goto next_link.href
   end
 rescue StandardError => e
-  binding.pry
+  warn 'An error ocurred, saving log to error.json...'
+  File.write('error.json', JSON.dump({error_message: e.message, backtrace: e.backtrace}))
 ensure
   product_browser.close
   browser.close
 
   unless results.empty?
     puts 'Saving reviews to csv file...'
-    CSV.open("results.csv", 'wb', write_headers: true, headers: PRODUCT_PARSERS.keys) do |csv|
+    CSV.open('results.csv', 'wb', write_headers: true, headers: PRODUCT_PARSERS.keys) do |csv|
       results.each { |review| csv << review }
     end
   end

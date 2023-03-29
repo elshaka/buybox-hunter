@@ -120,3 +120,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/ruby,macos,windows
 
 *.csv
+error.json
+TODO
