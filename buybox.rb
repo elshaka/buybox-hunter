@@ -20,11 +20,11 @@ puts 'Starting web browser...'
 browser = Watir::Browser.new :chrome, headless: true
 product_browser = Watir::Browser.new :chrome, headless: true
 
-puts 'Opening search results...'
-browser.goto url
-
 results = []
 begin
+  puts 'Opening search results...'
+  browser.goto url
+
   MAX_RESULT_PAGES.times do
     result_list = browser.div(class: 's-result-list')
     result_list.wait_until(&:exists?)
@@ -61,7 +61,19 @@ begin
   end
 rescue StandardError => e
   warn 'An error ocurred, saving log to error.json...'
-  File.write('error.json', JSON.dump({error_message: e.message, backtrace: e.backtrace}))
+  File.write('error.json', JSON.dump({
+    error: {
+      message: e.message,
+      backtrace: e.backtrace
+    },
+    search_params: {
+      search_url: url,
+      current_url: browser.url,
+      max_result_pages: MAX_RESULT_PAGES,
+      minimum_rating_count: MINIMUM_RATING_COUNT,
+      max_buybox_count: MAX_BUYBOX_COUNT,
+    }
+  }))
 ensure
   product_browser.close
   browser.close
